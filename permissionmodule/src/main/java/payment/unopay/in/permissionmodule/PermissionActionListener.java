@@ -7,7 +7,5 @@ import java.util.ArrayList;
  * // Copyright (c) 2016 Techjini Solutions. All rights reserved.
  */
 public interface PermissionActionListener {
-    public void onPermissionGrant();
-    public void onPermissionDeny();
     public void onMultiPermissionAction(ArrayList<AppPermission> appPermissions);
 }

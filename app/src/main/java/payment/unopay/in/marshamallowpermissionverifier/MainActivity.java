@@ -1,10 +1,12 @@
 package payment.unopay.in.marshamallowpermissionverifier;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Toast;
 
+import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.jar.Manifest;
 
@@ -30,6 +32,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         appPermissionModel.setFineLocationPermission(true, "Location required");
         appPermissions = appPermissionModel.getAppPermissionAsArrayList();
         mDevicePermissionHandler = new DevicePermissionHandler(this, this);
+
+
+
 
     }
 
@@ -61,18 +66,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    @Override
-    public void onPermissionGrant() {
-        Toast.makeText(MainActivity.this,"Grant",Toast.LENGTH_LONG).show();
-    }
 
-    @Override
-    public void onPermissionDeny() {
-        Toast.makeText(MainActivity.this,"Deny",Toast.LENGTH_LONG).show();
-    }
 
     @Override
     public void onMultiPermissionAction(ArrayList<AppPermission> appPermissions) {
-
+        if(appPermissions!=null) {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+            alertDialog.setTitle("Permission Status");
+            String message="";
+            for(AppPermission appPermission:appPermissions)
+            {
+                message+=appPermission.getName() +"-"+appPermission.isEnabled() +"\n";
+            }
+            alertDialog.setMessage(message);
+            alertDialog.show();
+        }
     }
 }

@@ -1,46 +1,87 @@
 package payment.unopay.in.permissionmodule;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
+
 /**
  * Created by Nitin S.Mesta on 12/5/16.
  * // Copyright (c) 2016 Techjini Solutions. All rights reserved.
  */
-public class AppPermission {
+public class AppPermission implements Parcelable {
 
-    private String mPermissionName;
-    private boolean mPermissionIsMandatory;
-    private String mPermissionRequestDesc;
-    private boolean mIsPermissionEnabled;
+    private String name;
+    private boolean isMandatory;
+    private String requestDesc;
+    private boolean isEnabled;
 
 
-    public String getmPermissionName() {
-        return mPermissionName;
+    protected AppPermission(Parcel in) {
+        name = in.readString();
+        isMandatory = in.readByte() != 0;
+        requestDesc = in.readString();
+        isEnabled = in.readByte() != 0;
     }
 
-    public void setmPermissionName(String mPermissionName) {
-        this.mPermissionName = mPermissionName;
+    public static final Creator<AppPermission> CREATOR = new Creator<AppPermission>() {
+        @Override
+        public AppPermission createFromParcel(Parcel in) {
+            return new AppPermission(in);
+        }
+
+        @Override
+        public AppPermission[] newArray(int size) {
+            return new AppPermission[size];
+        }
+    };
+
+    public AppPermission() {
+
     }
 
-    public boolean ismPermissionIsMandatory() {
-        return mPermissionIsMandatory;
+    public String getName() {
+        return name;
     }
 
-    public void setmPermissionIsMandatory(boolean mPermissionIsMandatory) {
-        this.mPermissionIsMandatory = mPermissionIsMandatory;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getmPermissionRequestDesc() {
-        return mPermissionRequestDesc;
+    public boolean isMandatory() {
+        return isMandatory;
     }
 
-    public void setmPermissionRequestDesc(String mPermissionRequestDesc) {
-        this.mPermissionRequestDesc = mPermissionRequestDesc;
+    public void setMandatory(boolean mandatory) {
+        this.isMandatory = mandatory;
     }
 
-    public boolean ismIsPermissionEnabled() {
-        return mIsPermissionEnabled;
+    public String getRequestDesc() {
+        return requestDesc;
     }
 
-    public void setmIsPermissionEnabled(boolean mIsPermissionEnabled) {
-        this.mIsPermissionEnabled = mIsPermissionEnabled;
+    public void setRequestDesc(String requestDesc) {
+        this.requestDesc = requestDesc;
+    }
+
+    public boolean isEnabled() {
+        return isEnabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.isEnabled = enabled;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeByte((byte) (isMandatory ? 1 : 0));
+        dest.writeString(requestDesc);
+        dest.writeByte((byte) (isEnabled ? 1 : 0));
     }
 }
