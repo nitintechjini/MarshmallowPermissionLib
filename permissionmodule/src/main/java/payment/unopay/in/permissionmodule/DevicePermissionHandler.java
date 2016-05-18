@@ -1,9 +1,7 @@
 package payment.unopay.in.permissionmodule;
 
-import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
@@ -28,16 +26,16 @@ public class DevicePermissionHandler{
 
     }
 
-    public boolean isPermissionEnabled(AppPermission permission) {
-        return ContextCompat.checkSelfPermission(mContext, permission.getName()) != PackageManager.PERMISSION_GRANTED ? false : true;
+    public boolean isPermissionEnabled(Permission permission) {
+        return permission!=null?ContextCompat.checkSelfPermission(mContext, permission.getName()) != PackageManager.PERMISSION_GRANTED ? false : true:false;
     }
 
-    public ArrayList<AppPermission> getMultiPermissionEnabledStatus(ArrayList<AppPermission> permissions) {
+    public ArrayList<Permission> getMultiPermissionEnabledStatus(ArrayList<Permission> permissions) {
         if (permissions != null) {
             for (int permissionIndex = 0; permissionIndex < permissions.size(); permissionIndex++) {
-                AppPermission appPermission = permissions.get(permissionIndex);
-                if (appPermission != null) {
-                    appPermission.setEnabled(isPermissionEnabled(appPermission));
+                Permission permission = permissions.get(permissionIndex);
+                if (permission != null) {
+                    permission.setEnabled(isPermissionEnabled(permission));
                 }
             }
         }
@@ -51,22 +49,22 @@ public class DevicePermissionHandler{
             //TODO handle the requested permission
             if(intent!=null)
             {
-                ArrayList<AppPermission> appPermissions=intent.getParcelableArrayListExtra("permissionList");
-                appPermissions=getMultiPermissionEnabledStatus(appPermissions);
+                ArrayList<Permission> permissions =intent.getParcelableArrayListExtra("permissionList");
+                permissions =getMultiPermissionEnabledStatus(permissions);
                 if(mPermissionActionListener!=null)
                 {
-                    mPermissionActionListener.onMultiPermissionAction(appPermissions);
+                    mPermissionActionListener.onMultiPermissionAction(permissions);
                 }
             }
             LocalBroadcastManager.getInstance(mContext).unregisterReceiver(this);
         }
     };
 
-    public void requestUserPermission(ArrayList<AppPermission> appPermissions) {
+    public void requestUserPermission(ArrayList<Permission> permissions) {
 
         Intent permissionHandlerIntent=new Intent(mContext,PermissionHandler.class);
         LocalBroadcastManager.getInstance(mContext).registerReceiver(permissionInteractionBroadCast,new IntentFilter("PERMISSION_ACTION"));
-        permissionHandlerIntent.putParcelableArrayListExtra("permissionList",appPermissions);
+        permissionHandlerIntent.putParcelableArrayListExtra("permissionList", permissions);
         mContext.startActivity(permissionHandlerIntent);
 
     }

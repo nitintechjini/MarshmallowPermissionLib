@@ -1,7 +1,6 @@
 package payment.unopay.in.permissionmodule;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,10 +19,10 @@ public class PermissionHandler extends AppCompatActivity implements ActivityComp
     private static final int MULTI_PERMISSION_REQUEST_CODE = 1;
     private static final int APP_SETTING_REQUEST_CODE = 2;
     private AlertDialog.Builder dialogBuilder;
-    private ArrayList<AppPermission> appPermissions=new ArrayList<>();
-    private ArrayList<AppPermission> mRationaleList = new ArrayList<>(), mPermissionList = new ArrayList<>();
+    private ArrayList<Permission> permissions =new ArrayList<>();
+    private ArrayList<Permission> mRationaleList = new ArrayList<>(), mPermissionList = new ArrayList<>();
     private String permissionDescription = "";
-    private HashMap<String, AppPermission> mRequestedAppPermissions = new HashMap<>();
+    private HashMap<String, Permission> mRequestedAppPermissions = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,16 +32,16 @@ public class PermissionHandler extends AppCompatActivity implements ActivityComp
         Bundle bundle = getIntent().getExtras();
 
         if (bundle != null && bundle.get("permissionList")!=null) {
-            appPermissions=bundle.getParcelableArrayList("permissionList");
-            if (appPermissions != null) {
-                for (AppPermission appPermission : appPermissions) {
-                    if (appPermission != null) {
-                        mRequestedAppPermissions.put(appPermission.getName(), appPermission);
-                        if (ActivityCompat.shouldShowRequestPermissionRationale(this, appPermission.getName())) {
-                            permissionDescription += appPermission.getRequestDesc() + "\n";
-                            mRationaleList.add(appPermission);
+            permissions =bundle.getParcelableArrayList("permissionList");
+            if (permissions != null) {
+                for (Permission permission : permissions) {
+                    if (permission != null) {
+                        mRequestedAppPermissions.put(permission.getName(), permission);
+                        if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission.getName())) {
+                            permissionDescription += permission.getRequestDesc() + "\n";
+                            mRationaleList.add(permission);
                         } else {
-                            mPermissionList.add(appPermission);
+                            mPermissionList.add(permission);
                         }
                     }
                 }
@@ -63,11 +62,11 @@ public class PermissionHandler extends AppCompatActivity implements ActivityComp
     }
 
 
-    private String[] getMultiPermissionNameAsString(ArrayList<AppPermission> appPermissions) {
-        String[] permissionArray = new String[appPermissions != null ? appPermissions.size() : 0];
+    private String[] getMultiPermissionNameAsString(ArrayList<Permission> permissions) {
+        String[] permissionArray = new String[permissions != null ? permissions.size() : 0];
         int index = 0;
-        for (AppPermission appPermission : appPermissions) {
-            permissionArray[index++] = appPermission.getName();
+        for (Permission permission : permissions) {
+            permissionArray[index++] = permission.getName();
         }
         return permissionArray;
     }
@@ -77,7 +76,7 @@ public class PermissionHandler extends AppCompatActivity implements ActivityComp
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==APP_SETTING_REQUEST_CODE)
         {
-            sendActionBroadCast(appPermissions);
+            sendActionBroadCast(permissions);
         }
     }
 
@@ -86,11 +85,11 @@ public class PermissionHandler extends AppCompatActivity implements ActivityComp
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == MULTI_PERMISSION_REQUEST_CODE) {
             if (grantResults != null && grantResults.length > 0) {
-                ArrayList<AppPermission> appPermissions = new ArrayList<>();
+                ArrayList<Permission> appPermissions = new ArrayList<>();
                 for (int permissionIndex = 0; permissionIndex < permissions.length; permissionIndex++) {
-                    AppPermission appPermission = mRequestedAppPermissions.get(permissions[permissionIndex]);
-                    appPermission.setEnabled(grantResults[0] == PackageManager.PERMISSION_GRANTED ? true : false);
-                    appPermissions.add(appPermission);
+                    Permission permission = mRequestedAppPermissions.get(permissions[permissionIndex]);
+                    permission.setEnabled(grantResults[0] == PackageManager.PERMISSION_GRANTED ? true : false);
+                    appPermissions.add(permission);
                 }
 
                 sendActionBroadCast(appPermissions);
@@ -98,7 +97,7 @@ public class PermissionHandler extends AppCompatActivity implements ActivityComp
             } else if (mRationaleList.size() > 0) {
                 showRationaleDialog();
             }else {
-                sendActionBroadCast(appPermissions);
+                sendActionBroadCast(this.permissions);
             }
 
         }
@@ -114,10 +113,10 @@ public class PermissionHandler extends AppCompatActivity implements ActivityComp
 
     }
 
-    private void sendActionBroadCast(ArrayList<AppPermission> appPermissions) {
+    private void sendActionBroadCast(ArrayList<Permission> permissions) {
         Intent resultIntent=new Intent();
         resultIntent.setAction("PERMISSION_ACTION");
-        resultIntent.putParcelableArrayListExtra("permissionList",appPermissions);
+        resultIntent.putParcelableArrayListExtra("permissionList", permissions);
         LocalBroadcastManager.getInstance(this).sendBroadcast(resultIntent);
         finish();
     }
@@ -137,7 +136,7 @@ public class PermissionHandler extends AppCompatActivity implements ActivityComp
         dialogBuilder.setNegativeButton("Not now", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                sendActionBroadCast(appPermissions);
+                sendActionBroadCast(permissions);
             }
         });
 

@@ -4,21 +4,18 @@ import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Toast;
 
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
-import java.util.jar.Manifest;
 
-import payment.unopay.in.permissionmodule.AppPermission;
+import payment.unopay.in.permissionmodule.Permission;
 import payment.unopay.in.permissionmodule.AppPermissionModel;
 import payment.unopay.in.permissionmodule.DevicePermissionHandler;
 import payment.unopay.in.permissionmodule.PermissionActionListener;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, PermissionActionListener {
 
-    ArrayList<AppPermission> appPermissions = new ArrayList<>();
-    DevicePermissionHandler mDevicePermissionHandler;
+    private DevicePermissionHandler mDevicePermissionHandler;
+    private AppPermissionModel appPermissionModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,14 +24,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViewById(R.id.check_sms_permission).setOnClickListener(this);
         findViewById(R.id.check_location_permission).setOnClickListener(this);
         findViewById(R.id.check_both_permission).setOnClickListener(this);
-        AppPermissionModel appPermissionModel = AppPermissionModel.getInstance();
-        appPermissionModel.setReadSMSPermission(true, "SMS is required");
-        appPermissionModel.setFineLocationPermission(true, "Location required");
-        appPermissions = appPermissionModel.getAppPermissionAsArrayList();
+        appPermissionModel = AppPermissionModel.getInstance()
+                .setFineLocationPermission(true, "Location required")
+                .setReadSMSPermission(true, "SMS is required");
+
         mDevicePermissionHandler = new DevicePermissionHandler(this, this);
-
-
-
 
     }
 
@@ -42,23 +36,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.check_sms_permission:
-                if (!mDevicePermissionHandler.isPermissionEnabled(appPermissions.get(1))) {
-                    ArrayList<AppPermission> smsPermissionList = new ArrayList<AppPermission>();
-                    smsPermissionList.add(appPermissions.get(1));
+                if (!mDevicePermissionHandler.isPermissionEnabled(appPermissionModel.getReadSMSPermission())) {
+                    ArrayList<Permission> smsPermissionList = new ArrayList<Permission>();
+                    smsPermissionList.add(appPermissionModel.getReadSMSPermission());
                     mDevicePermissionHandler.requestUserPermission(smsPermissionList);
                 }
                 break;
             case R.id.check_location_permission:
-                if (!mDevicePermissionHandler.isPermissionEnabled(appPermissions.get(0))) {
-                    ArrayList<AppPermission> smsPermissionList = new ArrayList<AppPermission>();
-                    smsPermissionList.add(appPermissions.get(0));
+                if (!mDevicePermissionHandler.isPermissionEnabled(appPermissionModel.getFineLocationPermission())) {
+                    ArrayList<Permission> smsPermissionList = new ArrayList<Permission>();
+                    smsPermissionList.add(appPermissionModel.getFineLocationPermission());
                     mDevicePermissionHandler.requestUserPermission(smsPermissionList);
                 }
                 break;
             case R.id.check_both_permission:
 
-                ArrayList<AppPermission> appPermissionsList = mDevicePermissionHandler.getMultiPermissionEnabledStatus(appPermissions);
-                mDevicePermissionHandler.requestUserPermission(appPermissionsList);
+                ArrayList<Permission> permissionsList = mDevicePermissionHandler.getMultiPermissionEnabledStatus(appPermissionModel.getAppPermissionAsArrayList());
+                mDevicePermissionHandler.requestUserPermission(permissionsList);
 
 
                 break;
@@ -69,14 +63,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     @Override
-    public void onMultiPermissionAction(ArrayList<AppPermission> appPermissions) {
-        if(appPermissions!=null) {
+    public void onMultiPermissionAction(ArrayList<Permission> permissions) {
+        if(permissions !=null) {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
             alertDialog.setTitle("Permission Status");
             String message="";
-            for(AppPermission appPermission:appPermissions)
+            for(Permission permission : permissions)
             {
-                message+=appPermission.getName() +"-"+appPermission.isEnabled() +"\n";
+                message+= permission.getName() +"-"+ permission.isEnabled() +"\n";
             }
             alertDialog.setMessage(message);
             alertDialog.show();

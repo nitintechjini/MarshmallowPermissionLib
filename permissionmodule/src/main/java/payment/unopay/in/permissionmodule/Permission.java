@@ -3,13 +3,11 @@ package payment.unopay.in.permissionmodule;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.io.Serializable;
-
 /**
  * Created by Nitin S.Mesta on 12/5/16.
  * // Copyright (c) 2016 Techjini Solutions. All rights reserved.
  */
-public class AppPermission implements Parcelable {
+public class Permission implements Parcelable {
 
     private String name;
     private boolean isMandatory;
@@ -17,26 +15,26 @@ public class AppPermission implements Parcelable {
     private boolean isEnabled;
 
 
-    protected AppPermission(Parcel in) {
+    protected Permission(Parcel in) {
         name = in.readString();
         isMandatory = in.readByte() != 0;
         requestDesc = in.readString();
         isEnabled = in.readByte() != 0;
     }
 
-    public static final Creator<AppPermission> CREATOR = new Creator<AppPermission>() {
+    public static final Creator<Permission> CREATOR = new Creator<Permission>() {
         @Override
-        public AppPermission createFromParcel(Parcel in) {
-            return new AppPermission(in);
+        public Permission createFromParcel(Parcel in) {
+            return new Permission(in);
         }
 
         @Override
-        public AppPermission[] newArray(int size) {
-            return new AppPermission[size];
+        public Permission[] newArray(int size) {
+            return new Permission[size];
         }
     };
 
-    public AppPermission() {
+    public Permission() {
 
     }
 
