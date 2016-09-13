@@ -23,9 +23,16 @@ public class AppPermissionModel {
 
     }
 
-    public ArrayList<Permission> getAppPermissionAsArrayList() {
+    public ArrayList<Permission> getPermissionsAsArrayList() {
         ArrayList<Permission> permissions = new ArrayList<>();
         permissions.addAll(mAppPermissionList.values());
+        return permissions;
+    }
+
+    public ArrayList<Permission> getPermissionAsArrayList(Permission permission)
+    {
+        ArrayList<Permission> permissions=new ArrayList<>();
+        permissions.add(permission);
         return permissions;
     }
 
@@ -49,6 +56,18 @@ public class AppPermissionModel {
          return mAppPermissionList.get(Manifest.permission.READ_SMS);
     }
 
+
+    public boolean hasMandatoryPermissionDisabled(ArrayList<Permission> permissions)
+    {
+        for(Permission permission:permissions)
+        {
+            if(permission.isMandatory())
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
 
     public AppPermissionModel setSendSMSPermission(boolean isMandatory, String message) {

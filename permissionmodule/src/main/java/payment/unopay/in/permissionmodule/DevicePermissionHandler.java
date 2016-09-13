@@ -23,7 +23,6 @@ public class DevicePermissionHandler{
         this.mContext = context;
         this.mPermissionActionListener = permissionActionListener;
 
-
     }
 
     public boolean isPermissionEnabled(Permission permission) {
@@ -41,6 +40,38 @@ public class DevicePermissionHandler{
         }
         return permissions;
     }
+
+    public boolean hasDisabledPermission(ArrayList<Permission> permissions)
+    {
+        if (permissions != null) {
+            for (Permission permission:permissions) {
+                if (permission != null) {
+                   if(!permission.isEnabled())
+                   {
+                       return true;
+                   }
+                }
+            }
+        }
+        return false;
+    }
+
+    public  boolean hasMandatoryPermissionDisabled(ArrayList<Permission> permissions)
+    {
+        if (permissions != null) {
+            for (Permission permission:permissions) {
+                if (permission != null) {
+                    if(!permission.isEnabled() && permission.isMandatory())
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+
 
 
     private BroadcastReceiver permissionInteractionBroadCast=new BroadcastReceiver() {

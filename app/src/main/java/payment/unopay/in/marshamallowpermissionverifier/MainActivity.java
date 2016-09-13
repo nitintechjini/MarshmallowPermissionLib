@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         appPermissionModel = AppPermissionModel.getInstance()
                 .setFineLocationPermission(true, "Location required")
                 .setReadSMSPermission(true, "SMS is required");
-
         mDevicePermissionHandler = new DevicePermissionHandler(this, this);
 
     }
@@ -50,11 +49,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.check_both_permission:
-
-                ArrayList<Permission> permissionsList = mDevicePermissionHandler.getMultiPermissionEnabledStatus(appPermissionModel.getAppPermissionAsArrayList());
+                ArrayList<Permission> permissionsList = mDevicePermissionHandler.getMultiPermissionEnabledStatus(appPermissionModel.getPermissionsAsArrayList());
                 mDevicePermissionHandler.requestUserPermission(permissionsList);
-
-
                 break;
 
         }

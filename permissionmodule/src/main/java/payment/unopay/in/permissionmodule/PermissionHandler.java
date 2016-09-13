@@ -1,15 +1,18 @@
 package payment.unopay.in.permissionmodule;
 
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
 import java.util.ArrayList;
@@ -38,7 +41,7 @@ public class PermissionHandler extends AppCompatActivity implements ActivityComp
                     if (permission != null) {
                         mRequestedAppPermissions.put(permission.getName(), permission);
                         if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission.getName())) {
-                            permissionDescription += permission.getRequestDesc() + "\n";
+                            permissionDescription += permission.getRequestDesc() + "\n\n\n";
                             mRationaleList.add(permission);
                         } else {
                             mPermissionList.add(permission);
@@ -129,7 +132,6 @@ public class PermissionHandler extends AppCompatActivity implements ActivityComp
         dialogBuilder.setPositiveButton("Grant", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-
                 launchAppSettings(PermissionHandler.this.getPackageName());
             }
         });
@@ -139,7 +141,8 @@ public class PermissionHandler extends AppCompatActivity implements ActivityComp
                 sendActionBroadCast(permissions);
             }
         });
-
+        dialogBuilder.create();
         dialogBuilder.show();
+
     }
 }

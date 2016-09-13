@@ -15,3 +15,9 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+-keep class payment.unopay.in.permissionmodule.**{*;}
+-keep interface payment.unopay.in.permissionmodule.PermissionActionListener{
+ public <methods>;
+}
+
+-keepattributes *Annotation*, InnerClasses, Signature
