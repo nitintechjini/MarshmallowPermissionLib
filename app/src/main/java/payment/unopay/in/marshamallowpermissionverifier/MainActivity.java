@@ -52,6 +52,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ArrayList<Permission> permissionsList = mDevicePermissionHandler.getMultiPermissionEnabledStatus(appPermissionModel.getPermissionsAsArrayList());
                 mDevicePermissionHandler.requestUserPermission(permissionsList);
                 break;
+            default:
+                break;
 
         }
     }
@@ -63,12 +65,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(permissions !=null) {
             AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
             alertDialog.setTitle("Permission Status");
-            String message="";
+            StringBuffer messageBuffer=new StringBuffer();
+
             for(Permission permission : permissions)
             {
-                message+= permission.getName() +"-"+ permission.isEnabled() +"\n";
+                messageBuffer.append(permission.getName());
+                messageBuffer.append("-");
+                messageBuffer.append( permission.isEnabled());
+                messageBuffer.append("\n");
             }
-            alertDialog.setMessage(message);
+            alertDialog.setMessage(messageBuffer.toString());
             alertDialog.show();
         }
     }

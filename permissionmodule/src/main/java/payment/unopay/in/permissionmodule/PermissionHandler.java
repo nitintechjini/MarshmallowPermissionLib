@@ -68,8 +68,10 @@ public class PermissionHandler extends AppCompatActivity implements ActivityComp
     private String[] getMultiPermissionNameAsString(ArrayList<Permission> permissions) {
         String[] permissionArray = new String[permissions != null ? permissions.size() : 0];
         int index = 0;
-        for (Permission permission : permissions) {
-            permissionArray[index++] = permission.getName();
+        if(permissions!=null) {
+            for (Permission permission : permissions) {
+                permissionArray[index++] = permission.getName();
+            }
         }
         return permissionArray;
     }
