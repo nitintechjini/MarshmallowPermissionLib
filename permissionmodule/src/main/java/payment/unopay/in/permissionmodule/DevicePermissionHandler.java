@@ -84,10 +84,11 @@ public class DevicePermissionHandler{
                 permissions =getMultiPermissionEnabledStatus(permissions);
                 if(mPermissionActionListener!=null)
                 {
+                    LocalBroadcastManager.getInstance(mContext).unregisterReceiver(this);
                     mPermissionActionListener.onMultiPermissionAction(permissions);
                 }
             }
-            LocalBroadcastManager.getInstance(mContext).unregisterReceiver(this);
+
         }
     };
 

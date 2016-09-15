@@ -14,8 +14,9 @@ import payment.unopay.in.permissionmodule.PermissionActionListener;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, PermissionActionListener {
 
-    private DevicePermissionHandler mDevicePermissionHandler;
     private AppPermissionModel appPermissionModel;
+    private DevicePermissionHandler mDevicePermissionHandler;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
